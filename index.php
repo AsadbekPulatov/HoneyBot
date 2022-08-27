@@ -21,6 +21,13 @@ if ($text == '/start') {
         'text' => "Assalomu alaykum '$name', Botimizga xush kelibsiz !  Bot orqali masofadan turib 🍯 asal buyurtma qilishingiz mumkin !"
     ];
     $telegram->sendMessage($content);
+} elseif ($text == "🍯 Ba'tafsil ma'lumot"){
+    $content = [
+        'chat_id' => $chat_id,
+        'text' => "Biz haqimizda ma'lumot. <a href='https://telegra.ph/Biz-haqimizda-08-27-2'>Ko'rish</a>",
+        'parse_mode' => 'html',
+    ];
+    $telegram->sendMessage($content);
 }
 
 ?>
