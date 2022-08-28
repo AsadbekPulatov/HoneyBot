@@ -10,12 +10,12 @@ $text = $telegram->Text();
 $data = $telegram->getData();
 $message = $data['message'];
 $name = $message['from']['first_name'];
-$date=date('Y-m-d H:i:s',$message['date']);
+$date = date('Y-m-d H:i:s', $message['date']);
 
 $step = "";
 $sql = "SELECT chat_id FROM users where chat_id = '$chat_id'";
 $result = $connect->query($sql);
-if ($result->num_rows != 0){
+if ($result->num_rows != 0) {
     $sql = "SELECT step FROM users where chat_id = '$chat_id'";
     $result = $connect->query($sql);
     $row = $result->fetch_assoc();
@@ -31,7 +31,6 @@ $orders = [
 ];
 
 
-
 switch ($text) {
 //    case "/start":
 //        showStart();
@@ -43,17 +42,17 @@ switch ($text) {
 //        showOrder();
 //        break;
     default:
-        if($step == 'start'){
+        if ($step == 'start') {
             showStart();
-        }elseif ($step == 'order'){
+        } elseif (in_array($text, $orders)) {
+            $index = array_search($text, $orders);
+            if ($text == $orders[$index] && $step == 'order') {
+                $sql = "UPDATE users SET step = 'phone', product = $i WHERE chat_id = '$chat_id'";
+                $connect->query($sql);
+            }
+        } elseif ($step == 'order') {
             showOrder();
-        }elseif (in_array($text, $orders)) {
-            for ($i = 0; $i < count($orders); $i++)
-                if($text == $orders[$i] && $step == 'order'){
-                    $sql = "UPDATE users SET step='phone', product='$i' WHERE chat_id = '$chat_id'";
-                    $connect->query($sql);
-                }
-        }elseif ($step == 'phone'){
+        } elseif ($step == 'phone') {
             askContact();
         }
         break;
@@ -63,9 +62,9 @@ function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
     $sql = "SELECT * from users WHERE chat_id='$chat_id'";
-    $result=$connect->query($sql);
-    if($result->num_rows == 0){
-        $sql="insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
+    $result = $connect->query($sql);
+    if ($result->num_rows == 0) {
+        $sql = "insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
         $connect->query($sql);
     }
     $option = array(
