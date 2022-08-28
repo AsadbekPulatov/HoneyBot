@@ -41,8 +41,8 @@ function showStart()
 {
     global $telegram, $chat_id, $name;
     $option = array(
-        array($telegram->buildKeyboardButton("🍯 Ba'tafsil ma'lumot")),
-        array($telegram->buildKeyboardButton("🍯 Buyurtma berish")),
+        array($telegram->buildKeyboardButton("📜 Biz haqimizda")),
+        array($telegram->buildKeyboardButton("🚛 Buyurtma berish")),
     );
     $keyboard = $telegram->buildKeyBoard($option, true, true);
     $content = [
