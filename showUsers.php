@@ -28,11 +28,10 @@
                 '5 kilogramm - 💵 400 000 so`m',
                 '10 kilogramm - 💵 750 000 so`m'
             ];
-            if($conn){
             $sql="select * from users;";
-            $result=mysqli_query($conn,$sql);
-            if (mysqli_num_rows($result) > 0) {
-                while($row = mysqli_fetch_assoc($result)) {
+            $result=$connect->query($sql);
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
                     ?>
                     <div class="col-sm-10 col-lg-3 p-4 col-md-10 card " style="border: 1px  solid blue; height: 400px; box-shadow: 0px 0px 10px 10px #c6c6c8">
                         <p>👤 Buyurtmachi ismi: <?php echo $row['name'] ?></p>
@@ -60,4 +59,3 @@
 <?php
 
 mysqli_close($conn);
-}

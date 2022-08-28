@@ -13,10 +13,10 @@ $name = $message['from']['first_name'];
 $date=date('Y-m-d H:i:s',$message['date']);
 
 $step = "";
-$sql = "SELECT chat_id FROM users where chat_id = $chat_id";
+$sql = "SELECT chat_id FROM users where chat_id = '$chat_id'";
 $result = $connect->query($sql);
 if ($result->num_rows != 0){
-    $sql = "SELECT step FROM users where chat_id $chat_id";
+    $sql = "SELECT step FROM users where chat_id = '$chat_id'";
     $result = $connect->query($sql);
     $row = $result->fetch_assoc();
     $step = $row['step'];
@@ -83,7 +83,7 @@ function showAbout()
 function showOrder()
 {
     global $telegram, $chat_id, $connect;
-    $sql = "UPDATE users SET step = 'order' WHERE chat_id = $chat_id";
+    $sql = "UPDATE users SET step = 'order' WHERE chat_id = '$chat_id'";
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("1kg - 50 000 so'm")),
