@@ -32,9 +32,9 @@ $orders = [
 
 
 switch ($text) {
-    case "/start":
-        showStart();
-        break;
+//    case "/start":
+//        showStart();
+//        break;
     case "📜 Biz haqimizda":
         showAbout();
         break;
@@ -42,10 +42,9 @@ switch ($text) {
 //        showOrder();
 //        break;
     default:
-//        if ($step == 'start') {
-//            showStart();
-//        } else
-        if ($step == 'order') {
+        if ($step == 'start') {
+            showStart();
+        } elseif ($step == 'order') {
             if(in_array($text, $orders)){
                 $index = array_search($text, $orders);
                 $sql = "UPDATE users SET step = 'phone', product = $index WHERE chat_id = '$chat_id'";
