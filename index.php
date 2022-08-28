@@ -30,31 +30,27 @@ $orders = [
     "7.5kg(5L) - 370 000 so'm",
 ];
 
-
-switch ($text) {
-//    case "/start":
-//        showStart();
-//        break;
-    case "📜 Biz haqimizda":
-        showAbout();
-        break;
-//    case "🚛 Buyurtma berish":
-//        showOrder();
-//        break;
-    default:
-        if ($step == 'start') {
+if ($step == 'start') {
+    switch ($text) {
+        case "/start":
             showStart();
-        } elseif ($step == 'order') {
-            if(in_array($text, $orders)){
-                $index = array_search($text, $orders);
-                $sql = "UPDATE users SET step = 'phone', product = $index WHERE chat_id = '$chat_id'";
-                $connect->query($sql);
-            } else
+            break;
+        case "📜 Biz haqimizda":
+            showAbout();
+            break;
+        case "🚛 Buyurtma berish":
             showOrder();
-        } elseif ($step == 'phone') {
-            askContact();
-        }
-        break;
+            break;
+    }
+} elseif ($step == 'order') {
+    if (in_array($text, $orders)) {
+        $index = array_search($text, $orders);
+        $sql = "UPDATE users SET step = 'phone', product = $index WHERE chat_id = '$chat_id'";
+        $connect->query($sql);
+    } else
+        showOrder();
+} elseif ($step == 'phone') {
+    askContact();
 }
 
 function showStart()
