@@ -31,17 +31,22 @@ $orders = [
 ];
 
 switch ($text) {
-    case "/start":
-        showStart();
-        break;
+//    case "/start":
+//        showStart();
+//        break;
     case "📜 Biz haqimizda":
         showAbout();
         break;
-    case "🚛 Buyurtma berish":
-        showOrder();
-        break;
+//    case "🚛 Buyurtma berish":
+//        showOrder();
+//        break;
     default:
-        if (in_array($text, $orders)) {
+        if($step == 'start'){
+            showStart();
+        }
+        elseif ($step == 'order'){
+            showOrder();
+        }elseif (in_array($text, $orders)) {
             askContact();
         }
         break;
