@@ -1,6 +1,8 @@
 <?php
 
+require_once 'connect.php';
 include 'Telegram.php';
+
 $telegram = new Telegram('5637021086:AAEGBKXf-KhpjA06oVdXgNpT1-2spJdN_hs');
 $chat_id = $telegram->ChatID();
 $text = $telegram->Text();
@@ -8,7 +10,9 @@ $text = $telegram->Text();
 $data = $telegram->getData();
 $message = $data['message'];
 $name = $message['from']['first_name'];
+$date=date('Y-m-d H:i:s',$message['date']);
 
+//$message['contact']['phone_number'];
 $orders = [
     "1kg - 50 000 so'm",
     "1.5kg(1L) - 75 000 so'm",
@@ -20,10 +24,10 @@ switch ($text) {
     case "/start":
         showStart();
         break;
-    case "🍯 Ba'tafsil ma'lumot":
+    case "📜 Biz haqimizda":
         showAbout();
         break;
-    case "🍯 Buyurtma berish":
+    case "🚛 Buyurtma berish":
         showOrder();
         break;
     default:
