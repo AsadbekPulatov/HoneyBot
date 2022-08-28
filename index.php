@@ -50,9 +50,12 @@ switch ($text) {
 function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
-    $step = "start";
-    $sql = "INSERT INTO users(`chat_id`, `name`, `step`, `date`) VALUES(`$chat_id`, `$name`, `$step`, `$date`)";
-    $result = $connect->query($sql);
+    $sql = "SELECT * from users WHERE chat_id='$chat_id'";
+    $result=$connect->query($sql);
+    if($result->num_rows == 0){
+        $sql="insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
+        $connect->query($sql);
+    }
     $option = array(
         array($telegram->buildKeyboardButton("📜 Biz haqimizda")),
         array($telegram->buildKeyboardButton("🚛 Buyurtma berish")),
