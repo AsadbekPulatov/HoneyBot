@@ -12,6 +12,16 @@ $message = $data['message'];
 $name = $message['from']['first_name'];
 $date=date('Y-m-d H:i:s',$message['date']);
 
+$step = "";
+$sql = "SELECT chat_id FROM users where chat_id = $chat_id";
+$result = mysqli_query($connect, $sql);
+if ($result->num_rows != 0){
+    $sql = "SELECT step FROM users where chat_id $chat_id";
+    $result = mysqli_query($connect, $sql);
+    $row = $result->fetch_assoc();
+    $step = $row['step'];
+}
+
 //$message['contact']['phone_number'];
 $orders = [
     "1kg - 50 000 so'm",
@@ -39,7 +49,10 @@ switch ($text) {
 
 function showStart()
 {
-    global $telegram, $chat_id, $name;
+    global $telegram, $chat_id, $name, $date, $connect;
+    $step = "start";
+    $sql = "INSERT INTO users(chat_id, name, step, date) VALUES($chat_id, $name, $step, $date)";
+    $result = mysqli_query($connect, $sql);
     $option = array(
         array($telegram->buildKeyboardButton("📜 Biz haqimizda")),
         array($telegram->buildKeyboardButton("🚛 Buyurtma berish")),
