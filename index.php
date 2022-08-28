@@ -30,6 +30,10 @@ $orders = [
     "7.5kg(5L) - 370 000 so'm",
 ];
 
+if ($text == "/start"){
+    showStart();
+}
+
 if ($step == 'start') {
     switch ($text) {
         case "/start":
