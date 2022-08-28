@@ -30,6 +30,8 @@ $orders = [
     "7.5kg(5L) - 370 000 so'm",
 ];
 
+
+
 switch ($text) {
 //    case "/start":
 //        showStart();
@@ -46,7 +48,13 @@ switch ($text) {
         }
         elseif ($step == 'order'){
             showOrder();
-        }elseif (in_array($text, $orders)) {
+        }elseif (in_array($text, $orders) && $text == 'order') {
+            for ($i = 0; $i < count($orders); $i++)
+                if($text == $orders[$i]){
+                    $sql = "UPDATE users SET step='phone', product='$i' WHERE chat_id = '$chat_id'";
+                    $connect->query($sql);
+                }
+        }elseif ($step == 'phone'){
             askContact();
         }
         break;
