@@ -14,10 +14,10 @@ $date=date('Y-m-d H:i:s',$message['date']);
 
 $step = "";
 $sql = "SELECT chat_id FROM users where chat_id = $chat_id";
-$result = mysqli_query($connect, $sql);
+$result = $connect->query($sql);
 if ($result->num_rows != 0){
     $sql = "SELECT step FROM users where chat_id $chat_id";
-    $result = mysqli_query($connect, $sql);
+    $result = $connect->query($sql);
     $row = $result->fetch_assoc();
     $step = $row['step'];
 }
@@ -51,8 +51,8 @@ function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
     $step = "start";
-    $sql = "INSERT INTO users(chat_id, name, step, date) VALUES($chat_id, $name, $step, $date)";
-    $result = mysqli_query($connect, $sql);
+    $sql = "INSERT INTO users(chat_id, name, step, date) VALUES('$chat_id', '$name', '$step', '$date')";
+    $result = $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("📜 Biz haqimizda")),
         array($telegram->buildKeyboardButton("🚛 Buyurtma berish")),
