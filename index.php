@@ -82,7 +82,9 @@ function showAbout()
 
 function showOrder()
 {
-    global $telegram, $chat_id;
+    global $telegram, $chat_id, $connect;
+    $sql = "UPDATE users SET step = 'order' WHERE chat_id = $chat_id";
+    $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("1kg - 50 000 so'm")),
         array($telegram->buildKeyboardButton("1.5kg(1L) - 75 000 so'm")),
