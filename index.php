@@ -32,9 +32,9 @@ $orders = [
 
 
 switch ($text) {
-//    case "/start":
-//        showStart();
-//        break;
+    case "/start":
+        showStart();
+        break;
     case "📜 Biz haqimizda":
         showAbout();
         break;
