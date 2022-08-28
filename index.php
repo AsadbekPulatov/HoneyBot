@@ -45,7 +45,7 @@ if ($step == 'start') {
 } elseif ($step == 'order') {
     if (in_array($text, $orders)) {
         $index = array_search($text, $orders);
-        $sql = "UPDATE users SET step = 'phone', product = $index WHERE chat_id = '$chat_id'";
+        $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
         $connect->query($sql);
     } else
         showOrder();
