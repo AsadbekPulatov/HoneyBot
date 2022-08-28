@@ -44,13 +44,12 @@ switch ($text) {
     default:
         if ($step == 'start') {
             showStart();
-        } elseif (in_array($text, $orders)) {
-            $index = array_search($text, $orders);
-            if ($text == $orders[$index] && $step == 'order') {
-                $sql = "UPDATE users SET step = 'phone', product = $i WHERE chat_id = '$chat_id'";
-                $connect->query($sql);
-            }
         } elseif ($step == 'order') {
+            if(in_array($text, $orders)){
+                $index = array_search($text, $orders);
+                $sql = "UPDATE users SET step = 'phone', product = $index WHERE chat_id = '$chat_id'";
+                $connect->query($sql);
+            } else
             showOrder();
         } elseif ($step == 'phone') {
             askContact();
