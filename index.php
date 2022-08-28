@@ -51,7 +51,7 @@ function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
     $step = "start";
-    $sql = "INSERT INTO users(chat_id, name, step, date) VALUES('$chat_id', '$name', '$step', '$date')";
+    $sql = "INSERT INTO users(`chat_id`, `name`, `step`, `date`) VALUES(`$chat_id`, `$name`, `$step`, `$date`)";
     $result = $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("📜 Biz haqimizda")),
