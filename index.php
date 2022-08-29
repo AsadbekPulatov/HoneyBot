@@ -64,6 +64,25 @@ switch ($step) {
             showDelivery();
         }
         break;
+    case "delivery":
+        switch ($text) {
+            case "✈️Yetkazib berish" :
+                askLocation();
+                break;
+            case "🍯️  O'zim borib olaman":
+                giveMe();
+                break;
+        }
+        break;
+    case "location" :
+        $latitude=$message['location']['latitude'];
+        $longitude=$message['location']['longitude'];
+        if ($latitude != "" && $longitude != "") {
+            $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id'";
+            $connect->query($sql);
+            giveMe();
+        }
+        break;
 }
 
 function showStart()
@@ -147,6 +166,35 @@ function showDelivery()
         'chat_id' => $chat_id,
         'reply_markup' => $keyboard,
         'text' => "Manzilimiz hali yo'q",
+    ];
+    $telegram->sendMessage($content);
+}
+
+function askLocation()
+{
+    global $telegram, $chat_id, $connect;
+    $sql = "UPDATE users SET step = 'location' WHERE chat_id = '$chat_id'";
+    $connect->query($sql);
+    $option = array(
+        array($telegram->buildKeyboardButton("Manzilni jo'natish", false, true)),
+    );
+    $keyboard = $telegram->buildKeyBoard($option, false, true);
+    $content = [
+        'chat_id' => $chat_id,
+        'reply_markup' => $keyboard,
+        'text' => "Endi manzilingizni jo'nating",
+    ];
+    $telegram->sendMessage($content);
+}
+
+function giveMe()
+{
+    global $telegram, $chat_id, $connect;
+    $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'";
+    $connect->query($sql);
+    $content = [
+        'chat_id' => $chat_id,
+        'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
     ];
     $telegram->sendMessage($content);
 }
