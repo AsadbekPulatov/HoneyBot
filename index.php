@@ -53,10 +53,15 @@ switch ($step) {
             $index = array_search($text, $orders);
             $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
+            askContact();
         }
         break;
     case "phone":
-        askContact();
+        if ($message['contact']['phone_number'] != "") {
+            $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id'";
+            $connect->query($sql);
+            showDelivery();
+        }
         break;
 }
 
@@ -124,6 +129,23 @@ function askContact()
         'chat_id' => $chat_id,
         'reply_markup' => $keyboard,
         'text' => "Hajm tanlandi. Endi telefon raqamingizni jo'nating.",
+    ];
+    $telegram->sendMessage($content);
+}
+
+function showDelivery()
+{
+    global $telegram, $chat_id;
+    $option = array(
+        array($telegram->buildKeyboardButton("✈️Yetkazib berish")),
+        array($telegram->buildKeyboardButton("🍯️  O'zim borib olaman")),
+    );
+    $keyboard = $telegram->buildKeyBoard($option, false, true);
+
+    $content = [
+        'chat_id' => $chat_id,
+        'reply_markup' => $keyboard,
+        'text' => "Manzilimiz hali yo'q",
     ];
     $telegram->sendMessage($content);
 }
