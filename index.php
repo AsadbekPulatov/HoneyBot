@@ -46,6 +46,8 @@ switch ($step) {
             case "🚛 Buyurtma berish":
                 showOrder();
                 break;
+            default:
+                alert();
         }
         break;
     case "order":
@@ -54,7 +56,9 @@ switch ($step) {
             $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             askContact();
-        }
+        } elseif ($text == "🔙 Orqaga") {
+            showStart();
+        } else alert();
         break;
     case "phone":
         if ($message['contact']['phone_number'] != "") {
@@ -62,6 +66,8 @@ switch ($step) {
             $sql = "UPDATE users SET step = 'delivery', phone = '$phone' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             showDelivery();
+        } elseif ($text == "🔙 Orqaga") {
+            showOrder();
         }
         break;
     case "delivery":
@@ -72,15 +78,22 @@ switch ($step) {
             case "🍯️  O'zim borib olaman":
                 giveMe();
                 break;
+            case "🔙 Orqaga":
+                askContact();
+                break;
+            default:
+                alert();
         }
         break;
     case "location" :
-        $latitude=$message['location']['latitude'];
-        $longitude=$message['location']['longitude'];
+        $latitude = $message['location']['latitude'];
+        $longitude = $message['location']['longitude'];
         if ($latitude != "" && $longitude != "") {
             $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             giveMe();
+        } elseif ($text == "🔙 Orqaga"){
+            showDelivery();
         }
         break;
 }
@@ -92,6 +105,9 @@ function showStart()
     $result = $connect->query($sql);
     if ($result->num_rows == 0) {
         $sql = "insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
+        $connect->query($sql);
+    } else {
+        $sql = "UPDATE users SET step = 'start' WHERE chat_id = '$chat_id'";
         $connect->query($sql);
     }
     $option = array(
@@ -128,6 +144,7 @@ function showOrder()
         array($telegram->buildKeyboardButton($orders[1])),
         array($telegram->buildKeyboardButton($orders[2])),
         array($telegram->buildKeyboardButton($orders[3])),
+        array($telegram->buildKeyboardButton("🔙 Orqaga")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
@@ -143,6 +160,7 @@ function askContact()
     global $telegram, $chat_id;
     $option = array(
         array($telegram->buildKeyboardButton("Raqamni jo'natish", true, false)),
+        array($telegram->buildKeyboardButton("🔙 Orqaga")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
@@ -159,6 +177,7 @@ function showDelivery()
     $option = array(
         array($telegram->buildKeyboardButton("✈️Yetkazib berish")),
         array($telegram->buildKeyboardButton("🍯️  O'zim borib olaman")),
+        array($telegram->buildKeyboardButton("🔙 Orqaga")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
 
@@ -177,6 +196,7 @@ function askLocation()
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("Manzilni jo'natish", false, true)),
+        array($telegram->buildKeyboardButton("🔙 Orqaga")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
@@ -192,9 +212,21 @@ function giveMe()
     global $telegram, $chat_id, $connect;
     $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'";
     $connect->query($sql);
+    $keyboard = $telegram->buildKeyBoard(NULL);
     $content = [
         'chat_id' => $chat_id,
+        'reply_markup' => $keyboard,
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
+    ];
+    $telegram->sendMessage($content);
+}
+
+function alert()
+{
+    global $telegram, $chat_id;
+    $content = [
+        'chat_id' => $chat_id,
+        'text' => "⚠️ Bunday buyruq mavjud emas ! \nIltimos quyidagi tugmalardan birini tanlang 👇",
     ];
     $telegram->sendMessage($content);
 }
