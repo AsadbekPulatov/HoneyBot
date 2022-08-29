@@ -20,13 +20,11 @@
         <div class="row d-flex justify-content-between w-100">
             <?php
             require_once "connect.php";
-            $massa=[
-                '0.5 kilogramm - 💵 50 000 so`m',
-                '1 kilogramm - 💵 90 000 so`m',
-                '2 kilogramm - 💵 170 000 so`m',
-                '3 kilogramm - 💵 250 000 so`m',
-                '5 kilogramm - 💵 400 000 so`m',
-                '10 kilogramm - 💵 750 000 so`m'
+            $orders = [
+                "1kg - 50 000 so'm",
+                "1.5kg(1L) - 75 000 so'm",
+                "4.5kg(3L) - 220 000 so'm",
+                "7.5kg(5L) - 370 000 so'm",
             ];
             $sql="select * from users;";
             $result=$connect->query($sql);
@@ -36,7 +34,7 @@
                     <div class="col-sm-10 col-lg-3 p-4 col-md-10 card " style="border: 1px  solid blue; height: 400px; box-shadow: 0px 0px 10px 10px #c6c6c8">
                         <p>👤 Buyurtmachi ismi: <?php echo $row['name'] ?></p>
                         <p>📱 Telefon raqami: <?php echo $row['phone'] ?></p>
-                        <p>🍯 Miqdor: <?php echo $massa[$row['massa']] ?></p>
+                        <p>🍯 Miqdor: <?php echo $orders[$row['product']] ?></p>
                         <p>⛳️ Manzil: <?php if($row['latitude']  != ""){
                                 echo "<br>latitude:".$row['latitude']."<br> longitude:".$row['longitude'];
                             } else {
