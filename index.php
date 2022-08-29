@@ -58,7 +58,8 @@ switch ($step) {
         break;
     case "phone":
         if ($message['contact']['phone_number'] != "") {
-            $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id'";
+            $phone = $message['contact']['phone_number'];
+            $sql = "UPDATE users SET step = 'delivery', phone = '$phone' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             showDelivery();
         }
