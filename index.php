@@ -92,6 +92,8 @@ switch ($step) {
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
         if ($text == "🔙 Orqaga"){
+            $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id'";
+            $connect->query($sql);
             showDelivery();
         }
         if ($latitude != "" && $longitude != "") {
