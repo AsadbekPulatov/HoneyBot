@@ -61,13 +61,14 @@ switch ($step) {
         } else alert();
         break;
     case "phone":
+        if ($text == "🔙 Orqaga") {
+            showOrder();
+        }
         if ($message['contact']['phone_number'] != "") {
             $phone = $message['contact']['phone_number'];
             $sql = "UPDATE users SET step = 'delivery', phone = '$phone' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             showDelivery();
-        } elseif ($text == "🔙 Orqaga") {
-            showOrder();
         }
         break;
     case "delivery":
@@ -88,12 +89,13 @@ switch ($step) {
     case "location" :
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
+        if ($text == "🔙 Orqaga"){
+            showDelivery();
+        }
         if ($latitude != "" && $longitude != "") {
             $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id'";
             $connect->query($sql);
             giveMe();
-        } elseif ($text == "🔙 Orqaga"){
-            showDelivery();
         }
         break;
 }
