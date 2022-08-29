@@ -218,10 +218,8 @@ function giveMe()
     global $telegram, $chat_id, $connect;
     $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'";
     $connect->query($sql);
-    $keyboard = $telegram->buildKeyBoard(NULL);
     $content = [
         'chat_id' => $chat_id,
-        'reply_markup' => $keyboard,
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
     ];
     $telegram->sendMessage($content);
