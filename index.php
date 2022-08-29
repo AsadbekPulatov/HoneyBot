@@ -30,31 +30,34 @@ $orders = [
     "7.5kg(5L) - 370 000 so'm",
 ];
 
-if ($text == "/start"){
+if ($text == "/start") {
     showStart();
 }
 
-if ($step == 'start') {
-    switch ($text) {
-        case "/start":
-            showStart();
-            break;
-        case "📜 Biz haqimizda":
-            showAbout();
-            break;
-        case "🚛 Buyurtma berish":
-            showOrder();
-            break;
-    }
-} elseif ($step == 'order') {
-    if (in_array($text, $orders)) {
-        $index = array_search($text, $orders);
-        $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
-        $connect->query($sql);
-    } else
-        showOrder();
-} elseif ($step == 'phone') {
-    askContact();
+switch ($step) {
+    case "start":
+        switch ($text) {
+            case "/start":
+                showStart();
+                break;
+            case "📜 Biz haqimizda":
+                showAbout();
+                break;
+            case "🚛 Buyurtma berish":
+                showOrder();
+                break;
+        }
+        break;
+    case "order":
+        if (in_array($text, $orders)) {
+            $index = array_search($text, $orders);
+            $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
+            $connect->query($sql);
+        }
+        break;
+    case "phone":
+        askContact();
+        break;
 }
 
 function showStart()
@@ -74,7 +77,7 @@ function showStart()
     $content = [
         'chat_id' => $chat_id,
         'reply_markup' => $keyboard,
-        'text' => "Assalomu alaykum '$name', Botimizga xush kelibsiz !  Bot orqali masofadan turib 🍯 asal buyurtma qilishingiz mumkin !"
+        'text' => "Assalomu alaykum $name, Botimizga xush kelibsiz !  Bot orqali masofadan turib 🍯 asal buyurtma qilishingiz mumkin !"
     ];
     $telegram->sendMessage($content);
 }
@@ -92,14 +95,14 @@ function showAbout()
 
 function showOrder()
 {
-    global $telegram, $chat_id, $connect;
+    global $telegram, $chat_id, $connect, $orders;
     $sql = "UPDATE users SET step = 'order' WHERE chat_id = '$chat_id'";
     $connect->query($sql);
     $option = array(
-        array($telegram->buildKeyboardButton("1kg - 50 000 so'm")),
-        array($telegram->buildKeyboardButton("1.5kg(1L) - 75 000 so'm")),
-        array($telegram->buildKeyboardButton("4.5kg(3L) - 220 000 so'm")),
-        array($telegram->buildKeyboardButton("7.5kg(5L) - 370 000 so'm")),
+        array($telegram->buildKeyboardButton($orders[0])),
+        array($telegram->buildKeyboardButton($orders[1])),
+        array($telegram->buildKeyboardButton($orders[2])),
+        array($telegram->buildKeyboardButton($orders[3])),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
