@@ -80,6 +80,8 @@ switch ($step) {
                 giveMe();
                 break;
             case "🔙 Orqaga":
+                $sql = "UPDATE users SET step = 'phone' WHERE chat_id = '$chat_id'";
+                $connect->query($sql);
                 askContact();
                 break;
             default:
