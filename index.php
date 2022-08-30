@@ -17,7 +17,7 @@ $name = $message['from']['first_name'];
 $date = date('Y-m-d H:i:s', $message['date']);
 
 $step = "";
-$sql = "SELECT chat_id FROM users where chat_id = '$chat_id' AND step != 'save'";
+$sql = "SELECT * FROM users where chat_id = '$chat_id' AND step != 'saved'";
 $result = $connect->query($sql);
 if ($result->num_rows != 0) {
     $sql = "SELECT step FROM users where chat_id = '$chat_id'";
@@ -111,7 +111,7 @@ switch ($step) {
 function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
-    $sql = "SELECT * from users WHERE chat_id='$chat_id' and step != 'save'";
+    $sql = "SELECT * from users WHERE chat_id='$chat_id' and step != 'saved'";
     $result = $connect->query($sql);
     if ($result->num_rows == 0) {
         $sql = "insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
@@ -185,8 +185,8 @@ function showDelivery()
 {
     global $telegram, $chat_id;
     $option = array(
-        array($telegram->buildKeyboardButton("✈️Yetkazib berish")),
-        array($telegram->buildKeyboardButton("🍯️  O'zim borib olaman")),
+        array($telegram->buildKeyboardButton("✈️Yetkazib berish ✈️")),
+        array($telegram->buildKeyboardButton("🍯️  O'zim borib olaman 🍯️")),
         array($telegram->buildKeyboardButton("🔙 Orqaga")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
