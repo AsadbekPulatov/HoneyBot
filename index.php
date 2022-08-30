@@ -34,7 +34,7 @@ $orders = [
     "7.5kg(5L) - 370 000 so'm",
 ];
 
-if ($text == "/start") {
+if ($text == "/start" && $step == "") {
     showStart();
 }
 
@@ -228,6 +228,7 @@ function giveMe()
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
     ];
     $telegram->sendMessage($content);
+    showStart();
 }
 
 function alert()
