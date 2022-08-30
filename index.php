@@ -57,7 +57,7 @@ switch ($step) {
     case "order":
         if (in_array($text, $orders)) {
             $index = array_search($text, $orders);
-            $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id'";
+            $sql = "UPDATE users SET step = 'phone', product = '$index' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             askContact();
         } elseif ($text == "🔙 Orqaga") {
@@ -70,7 +70,7 @@ switch ($step) {
         }
         if ($message['contact']['phone_number'] != "") {
             $phone = $message['contact']['phone_number'];
-            $sql = "UPDATE users SET step = 'delivery', phone = '$phone' WHERE chat_id = '$chat_id'";
+            $sql = "UPDATE users SET step = 'delivery', phone = '$phone' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             showDelivery();
         }
@@ -84,7 +84,7 @@ switch ($step) {
                 giveMe();
                 break;
             case "🔙 Orqaga":
-                $sql = "UPDATE users SET step = 'phone' WHERE chat_id = '$chat_id'";
+                $sql = "UPDATE users SET step = 'phone' WHERE chat_id = '$chat_id' and step != 'saved'";
                 $connect->query($sql);
                 askContact();
                 break;
@@ -96,12 +96,12 @@ switch ($step) {
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
         if ($text == "🔙 Orqaga"){
-            $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id'";
+            $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             showDelivery();
         }
         if ($latitude != "" && $longitude != "") {
-            $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id'";
+            $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             giveMe();
         }
@@ -117,7 +117,7 @@ function showStart()
         $sql = "insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
         $connect->query($sql);
     } else {
-        $sql = "UPDATE users SET step = 'start' WHERE chat_id = '$chat_id'";
+        $sql = "UPDATE users SET step = 'start' WHERE chat_id = '$chat_id' and step != 'saved'";
         $connect->query($sql);
     }
     $option = array(
@@ -147,7 +147,7 @@ function showAbout()
 function showOrder()
 {
     global $telegram, $chat_id, $connect, $orders;
-    $sql = "UPDATE users SET step = 'order' WHERE chat_id = '$chat_id'";
+    $sql = "UPDATE users SET step = 'order' WHERE chat_id = '$chat_id' and step != 'saved'";
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton($orders[0])),
@@ -202,7 +202,7 @@ function showDelivery()
 function askLocation()
 {
     global $telegram, $chat_id, $connect;
-    $sql = "UPDATE users SET step = 'location' WHERE chat_id = '$chat_id'";
+    $sql = "UPDATE users SET step = 'location' WHERE chat_id = '$chat_id' and step != 'saved'";
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("Manzilni jo'natish", false, true)),
@@ -220,7 +220,7 @@ function askLocation()
 function giveMe()
 {
     global $telegram, $chat_id, $connect;
-    $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'";
+    $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
 
     $content = [
