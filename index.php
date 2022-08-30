@@ -7,13 +7,17 @@ $telegram = new Telegram('5637021086:AAEGBKXf-KhpjA06oVdXgNpT1-2spJdN_hs');
 $chat_id = $telegram->ChatID();
 $text = $telegram->Text();
 
+$admin_chat_id = 967469906;
+
+date_default_timezone_set('Asia/Tashkent');
+
 $data = $telegram->getData();
 $message = $data['message'];
 $name = $message['from']['first_name'];
 $date = date('Y-m-d H:i:s', $message['date']);
 
 $step = "";
-$sql = "SELECT chat_id FROM users where chat_id = '$chat_id'";
+$sql = "SELECT chat_id FROM users where chat_id = '$chat_id' AND step != 'save'";
 $result = $connect->query($sql);
 if ($result->num_rows != 0) {
     $sql = "SELECT step FROM users where chat_id = '$chat_id'";
@@ -73,10 +77,10 @@ switch ($step) {
         break;
     case "delivery":
         switch ($text) {
-            case "✈️Yetkazib berish" :
+            case "✈️Yetkazib berish ✈️" :
                 askLocation();
                 break;
-            case "🍯️  O'zim borib olaman":
+            case "🍯️  O'zim borib olaman 🍯️":
                 giveMe();
                 break;
             case "🔙 Orqaga":
@@ -107,7 +111,7 @@ switch ($step) {
 function showStart()
 {
     global $telegram, $chat_id, $name, $date, $connect;
-    $sql = "SELECT * from users WHERE chat_id='$chat_id'";
+    $sql = "SELECT * from users WHERE chat_id='$chat_id' and step != 'save'";
     $result = $connect->query($sql);
     if ($result->num_rows == 0) {
         $sql = "insert into users (chat_id,name,created_at,step) values ('$chat_id','$name','$date','start')";
@@ -218,6 +222,7 @@ function giveMe()
     global $telegram, $chat_id, $connect;
     $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'";
     $connect->query($sql);
+
     $content = [
         'chat_id' => $chat_id,
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
