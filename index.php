@@ -20,7 +20,7 @@ $step = "";
 $sql = "SELECT * FROM users where chat_id = '$chat_id' AND step != 'saved'";
 $result = $connect->query($sql);
 if ($result->num_rows != 0) {
-    $sql = "SELECT step FROM users where chat_id = '$chat_id'";
+    $sql = "SELECT step FROM users where chat_id = '$chat_id'AND step != 'saved'";
     $result = $connect->query($sql);
     $row = $result->fetch_assoc();
     $step = $row['step'];
