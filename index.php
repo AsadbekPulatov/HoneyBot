@@ -265,8 +265,8 @@ function saved()
     $telegram->sendMessage($content);
     $content = [
         'chat_id' => $admin_chat_id,
-        'latitude' => $row['latitude'],
-        'longitude' => $row['longitude'],
+        'latitude' => floatval($row['latitude']),
+        'longitude' => floatval($row['longitude']),
     ];
     $telegram->sendLocation($content);
     showStart();
