@@ -106,6 +106,16 @@ switch ($step) {
             giveMe();
         }
         break;
+    case "wait":
+        switch ($text){
+            case "Boshqa buyurtma berish":
+                saved();
+                break;
+            case "Bekor qilish":
+                otkaz();
+                break;
+        }
+        break;
 }
 
 function showStart()
@@ -220,15 +230,30 @@ function askLocation()
 function giveMe()
 {
     global $telegram, $chat_id, $connect;
-    $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id'  and step != 'saved'";
+    $sql = "UPDATE users SET step = 'wait' WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
-
+    $option = array(
+        array($telegram->buildKeyboardButton("Boshqa buyurtma berish", false, true)),
+        array($telegram->buildKeyboardButton("Bekor qilish")),
+    );
+    $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
         'chat_id' => $chat_id,
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
     ];
     $telegram->sendMessage($content);
-    showStart();
+}
+
+function saved(){
+    global $telegram, $chat_id, $date, $connect;
+    $sql = "UPDATE users SET step = 'saved', created_at = '$date' WHERE chat_id = '$chat_id'  and step != 'saved'";
+    $connect->query($sql);
+}
+
+function otkaz(){
+    global $telegram, $chat_id, $date, $connect;
+    $sql = "UPDATE users SET step = 'saved', created_at = '$date', status = 0 WHERE chat_id = '$chat_id'  and step != 'saved'";
+    $connect->query($sql);
 }
 
 function alert()

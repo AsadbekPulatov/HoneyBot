@@ -41,7 +41,7 @@
                                 echo $row['address'];
                             }?></p>
                         <p>📅 Sana: <?php echo $row['created_at'] ?></p>
-                        <p>📇 Status: <?php  if($row['otmen']==1){ echo " bekor qilingan ";}else{ echo " kutilmoqda ";} ?></p>
+                        <p>📇 Status: <?php  if($row['status'] == 0){ echo " bekor qilingan ";}else{ echo " kutilmoqda ";} ?></p>
                     </div>
                     <?php
                 }
