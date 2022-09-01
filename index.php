@@ -263,7 +263,7 @@ function saved()
         'text' => $adminText,
     ];
     $telegram->sendMessage($content);
-    $connect = [
+    $content = [
         'chat_id' => $admin_chat_id,
         'latitude' => $row['latitude'],
         'longitude' => $row['longitude'],
