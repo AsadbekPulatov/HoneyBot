@@ -95,7 +95,7 @@ switch ($step) {
     case "location" :
         $latitude = $message['location']['latitude'];
         $longitude = $message['location']['longitude'];
-        if ($text == "🔙 Orqaga"){
+        if ($text == "🔙 Orqaga") {
             $sql = "UPDATE users SET step = 'delivery' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             showDelivery();
@@ -107,7 +107,7 @@ switch ($step) {
         }
         break;
     case "wait":
-        switch ($text){
+        switch ($text) {
             case "Boshqa buyurtma berish":
                 saved();
                 break;
@@ -229,8 +229,8 @@ function askLocation()
 
 function giveMe()
 {
-    global $telegram, $chat_id, $connect;
-    $sql = "UPDATE users SET step = 'wait' WHERE chat_id = '$chat_id'  and step != 'saved'";
+    global $telegram, $chat_id, $connect, $date;
+    $sql = "UPDATE users SET step = 'wait', created_at = '$date' WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("Boshqa buyurtma berish")),
@@ -245,16 +245,43 @@ function giveMe()
     $telegram->sendMessage($content);
 }
 
-function saved(){
-    global $telegram, $chat_id, $date, $connect;
-    $sql = "UPDATE users SET step = 'saved', created_at = '$date' WHERE chat_id = '$chat_id'  and step != 'saved'";
+function saved()
+{
+    global $telegram, $chat_id, $date, $connect, $admin_chat_id, $orders;
+    $sql = "SELECT * FROM users where chat_id = '$chat_id' AND step != 'saved'";
+    $result = $connect->query($sql);
+    $row = $result->fetch_assoc();
+
+    $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id' and step != 'saved'";
     $connect->query($sql);
+
+    $adminText = "Buyurtmachi: " . $row['name'] . "\n" .
+        "Telefon raqami: " . $row['phone'] . "\n" .
+        "Mahsulot: " . $orders[$row['product']] . "\n";
+    $content = [
+        'chat_id' => $admin_chat_id,
+        'text' => $adminText,
+    ];
+    $telegram->sendMessage($content);
+    $connect = [
+        'chat_id' => $admin_chat_id,
+        'latitude' => $row['latitude'],
+        'longitude' => $row['longitude'],
+    ];
+    $telegram->sendLocation($content);
+    showStart();
 }
 
-function otkaz(){
-    global $telegram, $chat_id, $date, $connect;
-    $sql = "UPDATE users SET step = 'saved', created_at = '$date', status = 0 WHERE chat_id = '$chat_id'  and step != 'saved'";
+function otkaz()
+{
+    global $telegram, $chat_id, $connect;
+    $sql = "UPDATE users SET step = 'saved', status = 0 WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
+
+    $content = [
+        'chat_id' => $chat_id,
+        'text' => "Buyurtma bekor qilindi!",
+    ];
 }
 
 function alert()
