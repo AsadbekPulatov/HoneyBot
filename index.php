@@ -239,6 +239,7 @@ function giveMe()
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
         'chat_id' => $chat_id,
+        'reply_markup' => $keyboard,
         'text' => "Buyurtma qabul qilindi. Siz bilan bog'lanamiz",
     ];
     $telegram->sendMessage($content);
