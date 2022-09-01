@@ -233,7 +233,7 @@ function giveMe()
     $sql = "UPDATE users SET step = 'wait' WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
     $option = array(
-        array($telegram->buildKeyboardButton("Boshqa buyurtma berish", false, true)),
+        array($telegram->buildKeyboardButton("Boshqa buyurtma berish")),
         array($telegram->buildKeyboardButton("Bekor qilish")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
