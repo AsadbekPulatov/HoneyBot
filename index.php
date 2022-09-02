@@ -111,9 +111,9 @@ switch ($step) {
             case "Boshqa buyurtma berish":
                 saved();
                 break;
-            case "Bekor qilish":
-                otkaz();
-                break;
+//            case "Bekor qilish":
+//                otkaz();
+//                break;
         }
         break;
 }
@@ -256,7 +256,7 @@ function giveMe()
     $connect->query($sql);
     $option = array(
         array($telegram->buildKeyboardButton("Boshqa buyurtma berish")),
-        array($telegram->buildKeyboardButton("Bekor qilish")),
+//        array($telegram->buildKeyboardButton("Bekor qilish")),
     );
     $keyboard = $telegram->buildKeyBoard($option, false, true);
     $content = [
