@@ -114,6 +114,7 @@ switch ($step) {
 //            case "Bekor qilish":
 //                otkaz();
 //                break;
+            default: alert();
         }
         break;
 }
