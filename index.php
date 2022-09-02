@@ -101,7 +101,7 @@ switch ($step) {
             showDelivery();
         }
         if ($latitude != "" && $longitude != "") {
-            $sql = "UPDATE users SET step = 'saved', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id' and step != 'saved'";
+            $sql = "UPDATE users SET step = 'wait', latitude = '$latitude', longitude = '$longitude' WHERE chat_id = '$chat_id' and step != 'saved'";
             $connect->query($sql);
             giveMe();
         }
@@ -229,7 +229,29 @@ function askLocation()
 
 function giveMe()
 {
-    global $telegram, $chat_id, $connect, $date;
+    global $telegram, $chat_id, $connect, $date, $orders, $admin_chat_id;
+
+    $sql = "SELECT * FROM users where chat_id = '$chat_id' AND step != 'saved'";
+    $result = $connect->query($sql);
+    $row = $result->fetch_assoc();
+
+    $adminText = "Buyurtmachi: " . $row['name'] . "\n" .
+        "Telefon raqami: " . $row['phone'] . "\n" .
+        "Mahsulot: " . $orders[$row['product']] . "\n";
+    $content = [
+        'chat_id' => $admin_chat_id,
+        'text' => $adminText,
+    ];
+    $telegram->sendMessage($content);
+    if ($row['latitude'] != "" && $row['longitude'] != "") {
+        $content = [
+            'chat_id' => $admin_chat_id,
+            'latitude' => floatval($row['latitude']),
+            'longitude' => floatval($row['longitude']),
+        ];
+        $telegram->sendLocation($content);
+    }
+
     $sql = "UPDATE users SET step = 'wait', created_at = '$date' WHERE chat_id = '$chat_id'  and step != 'saved'";
     $connect->query($sql);
     $option = array(
@@ -247,28 +269,10 @@ function giveMe()
 
 function saved()
 {
-    global $telegram, $chat_id, $date, $connect, $admin_chat_id, $orders;
-    $sql = "SELECT * FROM users where chat_id = '$chat_id' AND step != 'saved'";
-    $result = $connect->query($sql);
-    $row = $result->fetch_assoc();
+    global $chat_id, $connect;
 
     $sql = "UPDATE users SET step = 'saved' WHERE chat_id = '$chat_id' and step != 'saved'";
     $connect->query($sql);
-
-    $adminText = "Buyurtmachi: " . $row['name'] . "\n" .
-        "Telefon raqami: " . $row['phone'] . "\n" .
-        "Mahsulot: " . $orders[$row['product']] . "\n";
-    $content = [
-        'chat_id' => $admin_chat_id,
-        'text' => $adminText,
-    ];
-    $telegram->sendMessage($content);
-    $content = [
-        'chat_id' => $admin_chat_id,
-        'latitude' => floatval($row['latitude']),
-        'longitude' => floatval($row['longitude']),
-    ];
-    $telegram->sendLocation($content);
     showStart();
 }
 
@@ -282,6 +286,7 @@ function otkaz()
         'chat_id' => $chat_id,
         'text' => "Buyurtma bekor qilindi!",
     ];
+    $telegram->sendMessage($content);
 }
 
 function alert()
